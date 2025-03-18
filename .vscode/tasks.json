@@ -1,0 +1,58 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start MSSQL",
+            "detail": "Start the MSSQL docker container",
+            "type": "shell",
+            "command": "${workspaceFolder}/local/scripts/commands.ps1",
+            "args": [
+                "-up"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Stop MSSQL",
+            "detail": "Stop the MSSQL docker container",
+            "type": "shell",
+            "command": "${workspaceFolder}/local/scripts/commands.ps1",
+            "args": [
+                "-down"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "Reset MSSQL",
+            "detail": "Delete all data in the MSSQL container",
+            "type": "shell",
+            "command": "${workspaceFolder}/local/scripts/commands.ps1",
+            "args": [
+                "-resetDB"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+    ]
+}

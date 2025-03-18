@@ -1,0 +1,73 @@
+services:
+  # umbraco-frontend:
+  #   container_name: "umbraco-frontend"
+  #   build:
+  #     context: ../
+  #     dockerfile: local/build/umbraco.dockerfile    
+  #     args:
+  #       - UMBRACO_RUNTIME_PORT=${UMBRACO_RUNTIME_FRONTEND_PORT}
+  #       - UMBRACO_RUNTIME_USER=${UMBRACO_RUNTIME_FRONTEND_USER}
+  #       - UMBRACO_RUNTIME_USER_ID=${UMBRACO_RUNTIME_FRONTEND_USER_ID}
+  #       - UMBRACO_RUNTIME_GROUP=${UMBRACO_RUNTIME_FRONTEND_GROUP}
+  #       - UMBRACO_RUNTIME_GROUP_ID=${UMBRACO_RUNTIME_FRONTEND_GROUP_ID}
+  #       - UMBRACO_RUNTIME_DOTNET_VER=${UMBRACO_RUNTIME_DOTNET_VER}
+  #   restart: unless-stopped
+  #   ports:
+  #     - ${UMBRACO_HOST_FRONTEND_PORT}:${UMBRACO_RUNTIME_FRONTEND_PORT}
+  #   environment:
+  #     - ConnectionStrings__umbracoDbDSN=Server=mssql;Database=${MSSQL_UMBRACO_DB_NAME};User Id=${MSSQL_UMBRACO_DB_USER};Password=${MSSQL_UMBRACO_DB_PASSWORD};TrustServerCertificate=true;
+  #     - ConnectionStrings__umbracoDbDSN_ProviderName=Microsoft.Data.SqlClient
+  #     - Umbraco__CMS__Unattended__InstallUnattended=${UMBRACO_CMS_UNATTENDED_INSTALL}
+  #     - Umbraco__CMS__Unattended__UnattendedUserName=${UMBRACO_CMS_ADMIN_USER}
+  #     - Umbraco__CMS__Unattended__UnattendedUserEmail=${UMBRACO_CMS_ADMIN_EMAIL}
+  #     - Umbraco__CMS__Unattended__UnattendedUserPassword=${UMBRACO_CMS_ADMIN_PASSWORD}
+  #   depends_on:
+  #     mssql:
+  #       condition: service_healthy
+  # umbraco-backoffice:
+  #   container_name: "umbraco-backoffice"
+  #   build:
+  #     context: ../
+  #     dockerfile: local/build/umbraco.dockerfile    
+  #     args:
+  #       - UMBRACO_RUNTIME_PORT=${UMBRACO_RUNTIME_BACKOFFICE_PORT}
+  #       - UMBRACO_RUNTIME_USER=${UMBRACO_RUNTIME_BACKOFFICE_USER}
+  #       - UMBRACO_RUNTIME_USER_ID=${UMBRACO_RUNTIME_BACKOFFICE_USER_ID}
+  #       - UMBRACO_RUNTIME_GROUP=${UMBRACO_RUNTIME_BACKOFFICE_GROUP}
+  #       - UMBRACO_RUNTIME_GROUP_ID=${UMBRACO_RUNTIME_BACKOFFICE_GROUP_ID}
+  #       - UMBRACO_RUNTIME_DOTNET_VER=${UMBRACO_RUNTIME_DOTNET_VER}
+  #   restart: unless-stopped
+  #   ports:
+  #     - ${UMBRACO_HOST_BACKOFFICE_PORT}:${UMBRACO_RUNTIME_BACKOFFICE_PORT}
+  #   depends_on:
+  #     mssql:
+  #       condition: service_healthy
+  mssql:
+    container_name: "mssql"
+    build:
+      context: ../
+      dockerfile: local/build/mssql.dockerfile    
+      args:
+        - MSSQL_VER=${MSSQL_SERVER_VER}
+    entrypoint: ["/bin/bash", "entrypoint.sh" ]
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SERVER_SA_PASSWORD}
+      - MSSQL_UMBRACO_DB_NAME=${MSSQL_UMBRACO_DB_NAME}
+      - MSSQL_UMBRACO_DB_USER=${MSSQL_UMBRACO_DB_USER}
+      - MSSQL_UMBRACO_DB_PASSWORD=${MSSQL_UMBRACO_DB_PASSWORD}
+    ports:
+      - ${MSSQL_SERVER_HOST_PORT}:1433
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${MSSQL_SERVER_SA_PASSWORD}' -C -d master -Q 'SELECT 1' || exit 1"]      
+      interval: 15s
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mssql_data:
+    name: "${COMPOSE_PROJECT_NAME}__${MSSQL_SERVER_VOLUME_NAME}"
+

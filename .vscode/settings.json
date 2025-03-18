@@ -1,0 +1,30 @@
+{
+    "taskExplorer.exclude": [
+        "**/.vscode-test/**",
+        "**/Assets/**",
+        "**/bin/**",
+        "**/build/**",
+        "**/dist/**",
+        "**/doc/**",
+        "**/example/**",
+        "**/examples/**",
+        "**/ext/**",
+        "**/obj/**",
+        "**/out/**",
+        "**/output/**",
+        "**/packages/**",
+        "**/release/**",
+        "**/releases/**",
+        "**/samples/**",
+        "**/sdks/**",
+        "**/static/**",
+        "**/target/**",
+        "**/test/**",
+        "**/third_party/**",
+        "**/vendor/**",
+        "**/work/**",
+        "/c:/Users/dickison.12/workspace/UmbracoDocker/local/scripts/commands.ps1",
+        "/c:/Users/dickison.12/workspace/UmbracoDocker/local/config/mssql/entrypoint.sh",
+        "/c:/Users/dickison.12/workspace/UmbracoDocker/local/config/mssql/db-init.sh"
+    ]
+}

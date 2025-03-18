@@ -1,0 +1,3 @@
+# local dev files
+/local/.env
+/local/data

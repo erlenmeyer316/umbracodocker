@@ -1,0 +1,20 @@
+{
+    "recommendations": [
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "formulahendry.docker-explorer",
+        "ms-azuretools.vscode-docker",
+        "mikestead.dotenv",
+        "usernamehw.errorlens",
+        "ecmel.vscode-html-css",
+        "oderwat.indent-rainbow",
+        "patcx.vscode-nuget-gallery",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.powershell",
+        "esbenp.prettier-vscode",
+        "spmeesseman.vscode-taskexplorer",
+        "wayou.vscode-todo-highlight",
+        "redhat.vscode-yaml"
+    ]
+}
