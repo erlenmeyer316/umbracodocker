@@ -1,0 +1,58 @@
+pipeline {
+ agent {label 'jenoaaprd02'}
+ stages {     
+    stage ('Echo Directory'){
+        steps {
+            script {
+                // Print the current working directory
+                echo "Current working directory: ${env.WORKSPACE}"
+                // Print the current date and time
+                echo "Current date and time: ${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+                // Print the current user
+                echo "Current user: ${env.BUILD_USER}"
+                // Print the current branch
+                echo "Current branch: ${env.GIT_BRANCH}"
+                // Print the current commit ID
+                echo "Current commit ID: ${env.GIT_COMMIT}"
+                // Print the current build number
+                echo "Current build number: ${env.BUILD_NUMBER}"  
+                
+            }
+        }
+	}
+    stage ('Docker Build'){
+        steps {
+            script {
+                // Set the environment variable for the Docker registry
+                //env.DOCKER_REGISTRY = "repo.service.osu.edu:5000/containerservice/customer_flux/flux_sem_cs"
+                //env.DOCKER_IMAGE = "umbracopoc"
+                //git fetch --all --tags
+                //env.DOCKER_TAG = $(git log -1 --format=%h)
+
+                // Build the Docker image with the specified tag
+                //sh "sudo docker build --tag ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG} --tag ${env.DOCKER_REGISTRY}/${env.DOCKER_IMAGE}:latest ."
+                //echo
+            }
+        }
+    }
+    stage ('Trigger Secondary Job'){
+        steps {
+          //build job: "OUR_Main_Site_Kube_Dev", propagate: true, wait: false
+      }
+    }
+  }
+  post {
+    always {
+      cleanWs()
+      dir("${env.WORKSPACE}@tmp") {
+        deleteDir()
+      }
+      dir("${env.WORKSPACE}@script") {
+        deleteDir()
+      }
+      dir("${env.WORKSPACE}@script@tmp") {
+        deleteDir()
+      }
+    }
+  }
+}

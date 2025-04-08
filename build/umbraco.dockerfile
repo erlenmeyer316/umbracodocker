@@ -27,24 +27,24 @@ RUN dotnet publish "/src/UmbracoDockerProject/UmbracoDockerProject.csproj" -c Re
 ################################
 FROM base AS runtime
 # Create a nonroot group and user with explicit UMBRACO_RUNTIME_USER_ID 
-#RUN groupadd -r umbraco -g 1000
-#RUN useradd -u 1000 -r -g umbraco -m -d /home/umbraco -s /sbin/nologin -c "umbraco user" umbraco
-#RUN chmod -R 755 /home/umbraco
+RUN groupadd -r umbraco -g 1000
+RUN useradd -u 1000 -r -g umbraco -m -d /home/umbraco -s /sbin/nologin -c "umbraco user" umbraco
+RUN chmod -R 755 /home/umbraco
 # Set the working directory for the subsequent COPY command
 WORKDIR /app
 # Copy from the build image /app/publish directory to the container filesystem
 COPY --from=build /app/publish .
 # create necessary directory for runtime template compilation
-#RUN mkdir -p /app/umbraco/Data/TEMP/InMemoryAuto
-#RUN mkdir -p /app/uSync
-#RUN mkdir -p /app/wwwroot/css
-#RUN mkdir -p /app/wwwroot/fonts
-#RUN mkdir -p /app/wwwroot/media
+RUN mkdir -p /app/umbraco/Data/TEMP/InMemoryAuto
+RUN mkdir -p /app/uSync
+RUN mkdir -p /app/wwwroot/css
+RUN mkdir -p /app/wwwroot/fonts
+RUN mkdir -p /app/wwwroot/media
 # give non-root user ownership of the app folder
 RUN chmod -R 755 /app
-#RUN chown -R 1000:1000 /home/umbraco
-#RUN chown -R 1000:1000 /app
+RUN chown -R 1000:1000 /home/umbraco
+RUN chown -R 1000:1000 /app
 # make the non-root user the executing user of the container
-#USER umbraco
+USER umbraco
 # Specify the command executed when the container is started
 ENTRYPOINT ["dotnet", "UmbracoDockerProject.dll"]
