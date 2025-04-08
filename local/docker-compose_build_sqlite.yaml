@@ -1,0 +1,34 @@
+services:
+  umbraco-frontend:
+    container_name: "umbraco-frontend"
+    build:
+      context: ../
+      dockerfile: local/build/umbracolocal.dockerfile    
+      args:
+        - UMBRACO_RUNTIME_PORT=${UMBRACO_RUNTIME_FRONTEND_PORT}
+        - UMBRACO_RUNTIME_USER=${UMBRACO_RUNTIME_FRONTEND_USER}
+        - UMBRACO_RUNTIME_USER_ID=${UMBRACO_RUNTIME_FRONTEND_USER_ID}
+        - UMBRACO_RUNTIME_GROUP=${UMBRACO_RUNTIME_FRONTEND_GROUP}
+        - UMBRACO_RUNTIME_GROUP_ID=${UMBRACO_RUNTIME_FRONTEND_GROUP_ID}
+        - UMBRACO_RUNTIME_DOTNET_VER=${UMBRACO_RUNTIME_DOTNET_VER}
+    restart: unless-stopped
+    ports:
+      - ${UMBRACO_HOST_FRONTEND_PORT}:${UMBRACO_RUNTIME_FRONTEND_PORT}
+    environment:
+      - ConnectionStrings__umbracoDbDSN=Server=mssql;Database=${MSSQL_UMBRACO_DB_NAME};User Id=${MSSQL_UMBRACO_DB_USER};Password=${MSSQL_UMBRACO_DB_PASSWORD};TrustServerCertificate=true;
+      - ConnectionStrings__umbracoDbDSN_ProviderName=Microsoft.Data.SqlClient
+      - Umbraco__CMS__Unattended__InstallUnattended=${UMBRACO_CMS_UNATTENDED_INSTALL}
+      - Umbraco__CMS__Unattended__UnattendedUserName=${UMBRACO_CMS_ADMIN_USER}
+      - Umbraco__CMS__Unattended__UnattendedUserEmail=${UMBRACO_CMS_ADMIN_EMAIL}
+      - Umbraco__CMS__Unattended__UnattendedUserPassword=${UMBRACO_CMS_ADMIN_PASSWORD}
+    volumes:
+      - ../src/UmbracoDockerProject/Logs:/output/umbraco/Logs
+      - ../src/UmbracoDockerProject/uSync:/output/uSync
+      - ../src/UmbracoDockerProject/Views:/output/Views
+      - ../src/UmbracoDockerProject/wwwroot/css:/output/wwwroot/css
+      - ../src/UmbracoDockerProject/wwwroot/fonts:/output/wwwroot/fonts
+      - ../src/UmbracoDockerProject/wwwroot/media:/output/wwwroot/media
+      - ../src/UmbracoDockerProject/appsettings.Development.json:/output/appsettings.Development.json
+      - ../src/UmbracoDockerProject/appsettings.json:/output/appsettings.json
+      - ../src/UmbracoDockerProject/Data:/output/umbraco/Data      
+  

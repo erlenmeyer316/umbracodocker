@@ -1,6 +1,6 @@
-ARG MSSQL_VER
+ARG MSSQL_SERVER_VER=2022-latest
 
-FROM mcr.microsoft.com/mssql/server:$MSSQL_VER
+FROM mcr.microsoft.com/mssql/server:${MSSQL_SERVER_VER}
 
 USER root
 

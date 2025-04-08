@@ -1,0 +1,30 @@
+services:
+  mssql:
+    container_name: "mssql"
+    build:
+      context: ../
+      dockerfile: local/build/mssql.dockerfile    
+      args:
+        - MSSQL_VER=${MSSQL_SERVER_VER}
+    entrypoint: ["/bin/bash", "entrypoint.sh" ]
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SERVER_SA_PASSWORD}
+      - MSSQL_UMBRACO_DB_NAME=${MSSQL_UMBRACO_DB_NAME}
+      - MSSQL_UMBRACO_DB_USER=${MSSQL_UMBRACO_DB_USER}
+      - MSSQL_UMBRACO_DB_PASSWORD=${MSSQL_UMBRACO_DB_PASSWORD}
+    ports:
+      - ${MSSQL_SERVER_HOST_PORT}:1433
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${MSSQL_SERVER_SA_PASSWORD}' -C -d master -Q 'SELECT 1' || exit 1"]      
+      interval: 15s
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mssql_data:
+    name: "${COMPOSE_PROJECT_NAME}__${MSSQL_SERVER_VOLUME_NAME}"
+
